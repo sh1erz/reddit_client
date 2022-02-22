@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel by viewModels<MainViewModel> { ViewModelsFactory() }
-    private val adapter = PostAdapter()
+    private val adapter = PostAdapter(this)
     private val disposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {

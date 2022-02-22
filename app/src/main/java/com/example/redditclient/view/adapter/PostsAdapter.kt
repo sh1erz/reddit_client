@@ -1,5 +1,8 @@
 package com.example.redditclient.view.adapter
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,12 +14,18 @@ import coil.load
 import com.example.redditclient.R
 import com.example.redditclient.databinding.ItemPostBinding
 import com.example.redditclient.model.PostData
+import com.example.redditclient.view.ViewModelsFactory.Companion.REDDIT_DOMAIN
 
-class PostAdapter : PagingDataAdapter<PostData, PostAdapter.PostViewHolder>(DIFF_UTIL) {
+class PostAdapter(private val context: Context) :
+    PagingDataAdapter<PostData, PostAdapter.PostViewHolder>(DIFF_UTIL) {
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post = getItem(position) ?: return
         holder.bind(post)
+        holder.binding.root.setOnClickListener {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(REDDIT_DOMAIN + post.url))
+            context.startActivity(browserIntent)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -29,7 +38,7 @@ class PostAdapter : PagingDataAdapter<PostData, PostAdapter.PostViewHolder>(DIFF
         )
     }
 
-    class PostViewHolder(private val binding: ItemPostBinding) :
+    class PostViewHolder(val binding: ItemPostBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(post: PostData) {
             with(binding) {
@@ -58,10 +67,9 @@ class PostAdapter : PagingDataAdapter<PostData, PostAdapter.PostViewHolder>(DIFF
                             }
                         )
                     }
-                } ?: {
-                    thumbnail.visibility = View.GONE
                 }
             }
+
         }
     }
 

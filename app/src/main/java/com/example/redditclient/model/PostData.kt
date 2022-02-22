@@ -10,5 +10,5 @@ data class PostData(
     @SerializedName("thumbnail") val thumbnail : String?,
     @SerializedName("num_comments") val comments : Int,
     @SerializedName("score") val score : Int,
-    @SerializedName("url") val url : String,
+    @SerializedName("permalink") val url : String,
 ) : Data()

@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class ViewModelsFactory : ViewModelProvider.Factory {
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://www.reddit.com/")
+        .baseUrl(REDDIT_DOMAIN)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(RedditApiService::class.java)
@@ -25,4 +25,7 @@ class ViewModelsFactory : ViewModelProvider.Factory {
             else -> throw IllegalArgumentException("Unknown ViewModel class")
         } as T
 
+    companion object{
+        const val REDDIT_DOMAIN = "https://www.reddit.com/"
+    }
 }
