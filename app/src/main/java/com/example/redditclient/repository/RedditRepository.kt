@@ -1,20 +1,24 @@
-package com.example.redditclient.data
+package com.example.redditclient.repository
 
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.rxjava2.observable
+import com.example.redditclient.data.db.PostDb
 import com.example.redditclient.model.PostData
-import com.example.redditclient.repository.RedditApiService
 import io.reactivex.Observable
 
-class RedditRepository(val redditApiService: RedditApiService) {
-//todo
-    fun letPosts(pagingConfig: PagingConfig = getDefaultPageConfig()): Observable<PagingData<PostData>> {
+@ExperimentalPagingApi
+class RedditRepository(val redditApiService: RedditApiService, val postDb: PostDb) {
+
+    fun getPosts(pagingConfig: PagingConfig = getDefaultPageConfig()): Observable<PagingData<PostData>> {
         return Pager(
             config = pagingConfig,
-            pagingSourceFactory = { PostsPagingSource(redditApiService) }
-        ).observable
+            remoteMediator = PostMediator(redditApiService, postDb)
+        ) {
+            postDb.postDao().getAllPosts()
+        }.observable
     }
 
     private fun getDefaultPageConfig(): PagingConfig {
